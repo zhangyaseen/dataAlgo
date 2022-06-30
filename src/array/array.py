@@ -1,61 +1,90 @@
 
 
+from dataclasses import dataclass
 from textwrap import indent
 import random
 
+def find_by_pos(arr, pos):
+    if pos < 0 or pos >= len(arr):
+        return -1, "ERROR"
+    
+    return arr[pos], "SUCCESS"
 
-def find_val(arr, value):
-    print("arr:", arr, ", find:", value)
+
+def find_by_value(arr, value):
     for key in range(len(arr)):
         if arr[key] == value:
-            return key
+            return key, "SUCCESS"
 
-    return -1
+    return -1, "ERROR"
 
+def delete_by_pos(arr, pos):
+    if pos < 0 or pos >= len(arr):
+        return "ERROR"
 
-def del_val(arr, value):
-    print("arr:", arr, ", del:", value)
-    for key in range(len(arr)):
-        if arr[key] == value:
-            break
+    del arr[pos]
+    
+    return "SUCCESS"
 
-    for index in range(key, len(arr)-1):
-        arr[index] = arr[index+1]
+def delete_by_value(arr, value):
+    while value in arr:
+        arr.remove(value)
 
-    return arr
+def insert_by_pos(arr, pos, data):
+    if pos < 0 or pos > len(arr):
+        return "ERROR"
 
-def insert_value_befor(arr, origin, value):
-    print("insert value befor:", arr, origin, value)
-
-    for key in range(len(arr)):
-        if arr[key] == origin:
-            break
-
-    for index in range(len(arr) -1, key, -1):
+    arr.append(0)
+    for index in range(len(arr)-1, pos, -1):
         arr[index] = arr[index-1]
 
-    arr[key] = value
+    arr[pos] = data
+
+    return "SUCESS"
+
+def insert_by_value(arr, origin, data):
+    for key in range(len(arr)):
+        if arr[key-1] == origin:
+            break
 
     if key == len(arr):
-        return arr, -1
+        arr.append(data)
+        return "SUCESS"
 
-    return arr, 0
-    
+    arr.append(0)
+    for index in range(len(arr)-1, key, -1):
+        arr[index] = arr[index-1]
+
+    arr[key] = data
+
+    return "SUCESS"
 
 def main():
     arr = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
-    index = find_val(arr, random.randint(1, 10))
-    if index != -1:
-        print("index:", index)
+    value, status = find_by_pos(arr, random.randint(1, 10))
+    if status == "SUCCESS":
+        print("find by pos: ", value)
+
+    
+    pos, status = find_by_value(arr, random.randint(1, 10))
+    if status == "SUCCESS":
+        print("find by value: ", pos)
 
 
-    arr = del_val(arr, random.randint(1, 10))
-    print("del arr:", arr)
+    status = delete_by_pos(arr, random.randint(1, 10))
+    if status == "SUCCESS":
+        print("delete by pos: ", arr)
 
-    arr = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
-    arr, status = insert_value_befor(arr, random.randint(1, 9), random.randint(1, 10))
-    if status == 0:
-        print("insert:", arr)
+    delete_by_value(arr, random.randint(1, 8))
+    print("delete by value: ", arr)
+
+    status = insert_by_pos(arr, random.randint(1, 8), random.randint(1, 10))
+    if status == "SUCESS":
+        print("insert by pos: ", arr)
+
+    status = insert_by_value(arr, random.randint(1, 9), random.randint(1, 10))
+    if status == "SUCESS":
+        print("insert by value: ", arr)
 
 
 if __name__ == "__main__":
